@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt-nodejs');
 
-mongoose.connect('mongodb://localhost/users');
+mongoose.connect(process.env.DB);
 
 // user schema
 var UserSchema = new Schema({

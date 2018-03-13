@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var authJwtController = require('./auth_jwt');
 var User = require('./Users');
+var Movie = require('./Movies');
 var jwt = require('jsonwebtoken');
 
 var app = express();
@@ -37,6 +38,7 @@ router.route('/users/:userId')
         });
     });
 
+
 router.route('/users')
     .get(authJwtController.isAuthenticated, function (req, res) {
         User.find(function (err, users) {
@@ -45,6 +47,113 @@ router.route('/users')
             res.json(users);
         });
     });
+
+router.get('/movies', function (req, res) {
+        Movie.find(function (err, movies) {
+            if (err) res.send(err);
+
+            res.json(movies);
+        });
+    });
+
+router.post('/addAmovie', function(req, res) {
+    var count = req.body.Actors.length;
+    if(!req.body.Title) {
+        res.json({success: false, msg: 'Please pass a Title for the Movie'});
+    }
+    else if(!req.body.Year) {
+        res.json({success: false, msg: 'Please pass a Year for the Movie'});
+    }
+    else if(!req.body.Genre) {
+        res.json({success: false, msg: 'Please pass a Genre for the Movie'});
+    }
+    else if(count < 3) {
+        res.json({success: false, msg: 'Invalid amount of actors'});
+    }
+    else {
+        var movie = new Movie();
+        movie.Title = req.body.Title;
+        movie.Year = req.body.Year;
+        movie.Genre = req.body.Genre;
+        movie.Actors = req.body.Actors;
+
+        movie.save(function(err) {
+            if(err) {
+
+                if(err.code == 11000)
+                    return res.json({ success: false, message: 'A movie with that Title already exists.'});
+                else
+                    return res.json(err);
+            }
+
+            res.json({message: 'Movie inserted!'});
+        });
+
+    }
+});
+
+router.get('/movies/:movieId', function (req, res) {
+        var id = req.params.movieId;
+        Movie.findById(id, function(err, movie) {
+            if (err) res.send(err);
+
+            var movieJson = JSON.stringify(movie);
+            // return that user
+            res.json(movie);
+        });
+    });
+
+router.put('/movies/:movieId', function (req,res) {
+    var id = req.params.movieId;
+    Movie.findById(id, function (err, movie) {
+        if (err) res.send(err);
+        movie.Title = req.body.Title;
+        movie.Year = req.body.Year;
+        movie.Genre = req.body.Genre;
+        movie.Actors = req.body.Actors;
+
+        movie.save(function(err) {
+            if(err) {
+
+                if(err.code == 11000)
+                    return res.json({ success: false, message: 'A movie with that Title already exists.'});
+                else
+                    return res.json(err);
+            }
+
+            res.json({message: 'Movie Updated!'});
+        })
+    });
+});
+
+router.delete('/movies/:movieId', function (req,res) {
+   var id = req.params.movieId;
+   Movie.count({}, function (err, count) {
+
+       if(count <= 5) {
+
+           res.json({success: false, message: 'At least 5 movies must be in the database'});
+       }
+       else {
+           Movie.findById(id, function (err, movie) {
+               if (err) res.send(err);
+
+               movie.remove(function (err) {
+                   if(err)
+                       return res.json(err);
+                   else
+                       res.json({message: 'Movie Deleted'});
+
+               });
+
+           });
+       }
+   });
+
+
+});
+
+
 
 router.post('/signup', function(req, res) {
     if (!req.body.username || !req.body.password) {
