@@ -48,7 +48,8 @@ router.route('/users')
         });
     });
 
-router.get('/movies', function (req, res) {
+router.route('/movies')
+    .get(authJwtController.isAuthenticated, function (req, res) {
         Movie.find(function (err, movies) {
             if (err) res.send(err);
 
@@ -56,18 +57,23 @@ router.get('/movies', function (req, res) {
         });
     });
 
-router.post('/addAmovie', function(req, res) {
+router.route('/addAmovie')
+    .post(authJwtController.isAuthenticated, function(req, res) {
     var count = req.body.Actors.length;
     if(!req.body.Title) {
+        res = res.status(500);
         res.json({success: false, msg: 'Please pass a Title for the Movie'});
     }
     else if(!req.body.Year) {
+        res = res.status(500);
         res.json({success: false, msg: 'Please pass a Year for the Movie'});
     }
     else if(!req.body.Genre) {
+        res = res.status(500);
         res.json({success: false, msg: 'Please pass a Genre for the Movie'});
     }
     else if(count < 3) {
+        res = res.status(500);
         res.json({success: false, msg: 'Invalid amount of actors'});
     }
     else {
@@ -79,6 +85,7 @@ router.post('/addAmovie', function(req, res) {
 
         movie.save(function(err) {
             if(err) {
+                res = res.status(500);
 
                 if(err.code == 11000)
                     return res.json({ success: false, message: 'A movie with that Title already exists.'});
@@ -92,7 +99,8 @@ router.post('/addAmovie', function(req, res) {
     }
 });
 
-router.get('/movies/:movieId', function (req, res) {
+router.route('/movies/:movieId')
+    .get(authJwtController.isAuthenticated, function (req, res) {
         var id = req.params.movieId;
         Movie.findById(id, function(err, movie) {
             if (err) res.send(err);
@@ -103,7 +111,8 @@ router.get('/movies/:movieId', function (req, res) {
         });
     });
 
-router.put('/movies/:movieId', function (req,res) {
+router.route('/movies/:movieId')
+    .put(authJwtController.isAuthenticated, function (req,res) {
     var id = req.params.movieId;
     Movie.findById(id, function (err, movie) {
         if (err) res.send(err);
@@ -126,7 +135,8 @@ router.put('/movies/:movieId', function (req,res) {
     });
 });
 
-router.delete('/movies/:movieId', function (req,res) {
+router.route('/movies/:movieId')
+    .delete(authJwtController.isAuthenticated, function (req,res) {
    var id = req.params.movieId;
    Movie.count({}, function (err, count) {
 
