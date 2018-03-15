@@ -1,0 +1,421 @@
+{
+	"info": {
+		"name": "HW3",
+		"_postman_id": "6b942b2b-df59-40f5-94b8-6cf0c6e2ceaf",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "signup",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhYTFhYmYyMjUxNWMxNDA3MzgzMDNkMiIsInVzZXJuYW1lIjoicnNvb2QiLCJpYXQiOjE1MjA1NDQ3NjZ9.Mu0QqXX_TofsY_APBARoYLjlscr9oiHtB4c9UYMG8h8"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "Taylor",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "1234",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/signup",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"signup"
+					]
+				},
+				"description": "this request stores a new user"
+			},
+			"response": []
+		},
+		{
+			"name": "signin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "364beb93-5b47-4782-b3fc-36dffab0cf97",
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var JWT = jsonData.token;",
+							"postman.setEnvironmentVariable(\"token\", JWT);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "Taylor",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "1234",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/signin",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"signin"
+					]
+				},
+				"description": "sign in as a user"
+			},
+			"response": []
+		},
+		{
+			"name": "get all users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3121829-65e7-4b9a-9839-7a7d089d8874",
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var userId = jsonData[2]._id;",
+							"postman.setEnvironmentVariable(\"userID\", userId);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/users",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"users"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "find a user",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/users/{{userID}}",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"users",
+						"{{userID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add a movie",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "34563e38-4559-4f15-b452-13c129f6c6cd",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c8e85f93-4cbb-443c-9380-8ef946ed66dc",
+						"type": "text/javascript",
+						"exec": [
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Title\": \"Black Panther\",\n\t\"Year\": 2018,\n\t\"Genre\": \"Action\",\n\t\"Actors\": [{\n\t\t\"ActorName\": \"Kendrick Lamar\",\n\t\t\"CharacterName\": \"Rapper\"\n\t},\n\t{\n\t\t\"ActorName\": \"Michael B. Jordan\",\n\t\t\"CharacterName\": \"Bad guy\"\n\t},\n\t{\n\t\t\"ActorName\": \"Martin Freeman\",\n\t\t\"CharacterName\": \"White Man\"\n\t}]\n}\n"
+				},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/addAmovie",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"addAmovie"
+					]
+				},
+				"description": "A movie must be passed in json format"
+			},
+			"response": []
+		},
+		{
+			"name": "wrong # actors",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Title\": \"Black Panther\",\n\t\"Year\": 2018,\n\t\"Genre\": \"Action\",\n\t\"Actors\": [{\n\t\t\"ActorName\": \"Michael B. Jordan\",\n\t\t\"CharacterName\": \"Alex\"\n\t},\n\t{\n\t\t\"ActorName\": \"Kendrick Lamar\",\n\t\t\"CharacterName\": \"Rap Genius\"\n\t}]\n}"
+				},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/addAmovie",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"addAmovie"
+					]
+				},
+				"description": "wrong # Actors"
+			},
+			"response": []
+		},
+		{
+			"name": "All movies",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7edd69ad-36d8-403b-ac89-f290cdc559cc",
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var secId = jsonData[4]._id;",
+							"postman.setEnvironmentVariable(\"secId\", secId);",
+							"var secId = jsonData[5]._id;",
+							"postman.setEnvironmentVariable(\"id\", id);",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/movies",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies"
+					]
+				},
+				"description": "returns all of the movies within the database"
+			},
+			"response": []
+		},
+		{
+			"name": "update movie",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d8993850-f5ba-46c1-89f0-18785095055c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"Actors\": [\n            {\n                \"ActorName\": \"Will Smith\",\n                \"CharacterName\": \"J\"\n            },\n            {\n                \"ActorName\": \"Tommy Lee Jones\",\n                \"CharacterName\": \"K\"\n            },\n            {\n                \"ActorName\": \"Linda Feorentino\",\n                \"CharacterName\": \"Loral\"\n            }\n        ],\n        \"Title\": \"Men in Black\",\n        \"Year\": 1997,\n        \"Genre\": \"Action\"\n    }"
+				},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/movies/{{id}}",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"{{id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "delete a movie",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/movies/{{id}}",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"{{id}}"
+					]
+				},
+				"description": "removes a movie from the database"
+			},
+			"response": []
+		},
+		{
+			"name": "delete invalid",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/movies/{{secId}}",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"{{secId}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
