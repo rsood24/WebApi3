@@ -4,6 +4,7 @@ var passport = require('passport');
 var authJwtController = require('./auth_jwt');
 var User = require('./Users');
 var Movie = require('./Movies');
+var Review = require('./Reviews');
 var jwt = require('jsonwebtoken');
 
 var app = express();
@@ -111,6 +112,18 @@ router.route('/movies/:movieId')
         });
     });
 
+router.route('/movies/:movieId/:review')
+    .get(authJwtController.isAuthenticated, function (req, res) {
+        var id = req.params.movieId;
+        Movie.findById(id, function(err, movie) {
+            if (err) res.send(err);
+
+            var movieJson = JSON.stringify(movie);
+            // return that user
+            res.json(movie);
+        });
+    });
+
 router.route('/movies/:movieId')
     .put(authJwtController.isAuthenticated, function (req,res) {
     var id = req.params.movieId;
@@ -162,6 +175,32 @@ router.route('/movies/:movieId')
 
 
 });
+
+router.route('/review/:movieId')
+    .post(authJwtController.isAuthenticated, function (req,res) {
+       var id = req.params.movieId;
+       Movie.findById(id, function (err, movie) {
+           if (err) res.send(err);
+
+           review = new Review();
+           review.title = movie.title;
+           review.name = req.body.name;
+           review.quote = req.body.quote;
+           review.rating = req.body.rating;
+
+           review.save(function(err) {
+               if(err) {
+                   res = res.status(500);
+
+                   return res.json(err);
+               }
+
+               res.json({message: 'Review inserted!'});
+           });
+
+           });
+
+    });
 
 
 
