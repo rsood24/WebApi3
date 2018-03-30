@@ -115,11 +115,12 @@ router.route('/movies/:movieId')
 router.route('/review/:movieId')
     .get(authJwtController.isAuthenticated, function (req, res) {
         var id = req.params.movieId;
-        var review = req.params.review;
+        //var review = req.params.review;
         Movie.findById(id, function(err, movie) {
-            if (err) res.send(err);
-
-            if(review.equals("true"))
+            if (err){
+                res.send(err);
+            }
+            else
             {
                 var obj = new Object();
                 var query = {movieid: id};
@@ -133,18 +134,23 @@ router.route('/review/:movieId')
                         var retObj = JSON.stringify(obj);
                         res.send(retObj);
                     }
-
                 });
             }
-            else
-            {
-                var movieJson = JSON.stringify(movie);
-                // return that user
-                res.json(movie);
-            }
+           // if(review.equals("true"))
+            //{
+
 
         });
+           // }
+            //else
+           // {
+           //     var movieJson = JSON.stringify(movie);
+            // return that user
+           //     res.json(movie);
+           // }
+
     });
+
 
 
 router.route('/movies/:movieId')
