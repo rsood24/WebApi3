@@ -123,7 +123,7 @@ router.route('/movies/:movieId/:review')
             {
                 var obj = new Object();
                 var query = {movieid: id};
-                Review.find(query).toArray(function(err, result) {
+                Review.find(query, function(err, result) {
                     if(err) res.send(err);
 
                     obj.movie = movie;
