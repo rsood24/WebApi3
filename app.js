@@ -141,7 +141,7 @@ router.route('/movies/:movieId/:review')
 
         });
     });
-    
+
 
 router.route('/movies/:movieId')
     .put(authJwtController.isAuthenticated, function (req,res) {
