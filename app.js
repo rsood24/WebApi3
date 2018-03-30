@@ -112,7 +112,7 @@ router.route('/movies/:movieId')
         });
     });
 
-router.route('/movies/:movieId/:review')
+router.route('/review/:movieId')
     .get(authJwtController.isAuthenticated, function (req, res) {
         var id = req.params.movieId;
         var review = req.params.review;
@@ -133,7 +133,7 @@ router.route('/movies/:movieId/:review')
                         var retObj = JSON.stringify(obj);
                         res.send(retObj);
                     }
-                    
+
                 });
             }
             else
