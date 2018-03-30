@@ -115,14 +115,33 @@ router.route('/movies/:movieId')
 router.route('/movies/:movieId/:review')
     .get(authJwtController.isAuthenticated, function (req, res) {
         var id = req.params.movieId;
+        var review = req.params.review;
         Movie.findById(id, function(err, movie) {
             if (err) res.send(err);
 
-            var movieJson = JSON.stringify(movie);
-            // return that user
-            res.json(movie);
+            if(review.equals("true"))
+            {
+                var obj = new Object();
+                var query = {Title: movie.title};
+                Review.find(query).toArray(function(err, result) {
+                    if(err) res.send(err);
+
+                    obj.movie = movie;
+                    obj.reviews = result;
+                    var retObj = JSON.stringify(obj);
+                    res.send(retObj);
+                });
+            }
+            else
+            {
+                var movieJson = JSON.stringify(movie);
+                // return that user
+                res.json(movie);
+            }
+
         });
     });
+    
 
 router.route('/movies/:movieId')
     .put(authJwtController.isAuthenticated, function (req,res) {
@@ -182,11 +201,16 @@ router.route('/review/:movieId')
        Movie.findById(id, function (err, movie) {
            if (err) res.send(err);
 
-           review = new Review();
+           var review = new Review();
            review.title = movie.title;
            review.name = req.body.name;
            review.quote = req.body.quote;
            review.rating = req.body.rating;
+
+           if(req.body.rating > 5)
+           {
+               res.json({message: 'Invalid Rating'});
+           }
 
            review.save(function(err) {
                if(err) {

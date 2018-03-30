@@ -11,13 +11,14 @@ var ActorSchema = new Schema({
     CharacterName: { type: String, required: true}
 });
 
+/*
 var ReviewSchema = new Schema({
     title: { type: String, required: true},
     name: String,
     quote: String,
     rating: {type: Number, required: true}
 });
-
+*/
 var MovieSchema = new Schema({
     Title: { type: String, required: true },
     Year: { type: Number, required: true },
