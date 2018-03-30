@@ -211,16 +211,20 @@ router.route('/review/:movieId')
            {
                res.json({message: 'Invalid Rating'});
            }
+           else
+           {
+               review.save(function(err) {
+                   if(err) {
+                       res = res.status(500);
 
-           review.save(function(err) {
-               if(err) {
-                   res = res.status(500);
+                       return res.json(err);
+                   }
 
-                   return res.json(err);
-               }
+                   res.json({message: 'Review inserted!'});
+               });
+           }
 
-               res.json({message: 'Review inserted!'});
-           });
+
 
            });
 
