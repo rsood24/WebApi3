@@ -122,7 +122,7 @@ router.route('/movies/:movieId/:review')
             if(review.equals("true"))
             {
                 var obj = new Object();
-                var query = {Title: movie.title};
+                var query = {movieid: id};
                 Review.find(query).toArray(function(err, result) {
                     if(err) res.send(err);
 
