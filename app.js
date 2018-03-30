@@ -202,7 +202,7 @@ router.route('/review/:movieId')
            if (err) res.send(err);
 
            var review = new Review();
-           review.title = movie.title;
+           review.movieid = id;
            review.name = req.body.name;
            review.quote = req.body.quote;
            review.rating = req.body.rating;
