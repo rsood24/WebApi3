@@ -161,7 +161,7 @@ router.route('/review/:movieId')
                         obj.movie = movie;
                         obj.reviews = result;
                         var retObj = JSON.stringify(obj);
-                        res.send(retObj);
+                        res.json(retObj);
                     }
                 });
             }
