@@ -170,13 +170,6 @@ router.route('/review/:movieId')
 
 
         });
-           // }
-            //else
-           // {
-           //     var movieJson = JSON.stringify(movie);
-            // return that user
-           //     res.json(movie);
-           // }
 
     });
 
@@ -238,30 +231,35 @@ router.route('/review/:movieId')
     .post(authJwtController.isAuthenticated, function (req,res) {
        var id = req.params.movieId;
        Movie.findById(id, function (err, movie) {
-           if (err) res.send(err);
-
-           var review = new Review();
-           review.movieid = id;
-           review.name = req.body.name;
-           review.quote = req.body.quote;
-           review.rating = req.body.rating;
-
-           if(req.body.rating > 5)
-           {
-               res.json({message: 'Invalid Rating'});
-           }
+           if (err)
+               res.send({message: 'Movie not in database'});
            else
            {
-               review.save(function(err) {
-                   if(err) {
-                       res = res.status(500);
+               var review = new Review();
+               review.movieid = id;
+               review.name = req.body.name;
+               review.quote = req.body.quote;
+               review.rating = req.body.rating;
 
-                       return res.json(err);
-                   }
+               if(req.body.rating > 5)
+               {
+                   res.json({message: 'Invalid Rating'});
+               }
+               else
+               {
+                   review.save(function(err) {
+                       if(err) {
+                           res = res.status(500);
 
-                   res.json({message: 'Review inserted!'});
-               });
+                           return res.json(err);
+                       }
+
+                       res.json({message: 'Review inserted!'});
+                   });
+               }
            }
+
+
 
 
 
