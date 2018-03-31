@@ -103,14 +103,43 @@ router.route('/addAmovie')
 router.route('/movies/:movieId')
     .get(authJwtController.isAuthenticated, function (req, res) {
         var id = req.params.movieId;
-        Movie.findById(id, function(err, movie) {
-            if (err) res.send(err);
+        if (req.query.review === "true") {
+            Movie.findById(id, function (err, movie) {
+                if (err) {
+                    res.send(err);
+                }
+                else {
+                    var obj = new Object();
+                    var query = {movieid: id};
+                    Review.find(query, function (err, result) {
+                        if (err) {
+                            res.send(err);
+                        }
+                        else {
+                            obj.movie = movie;
+                            obj.reviews = result;
+                            var retObj = JSON.stringify(obj);
+                            res.send(retObj);
+                        }
+                    });
+                }
+            });
+        }
+        else {
+            Movie.findById(id, function (err, movie) {
+                if (err) res.send(err);
 
-            var movieJson = JSON.stringify(movie);
-            // return that user
-            res.json(movie);
-        });
+                var movieJson = JSON.stringify(movie);
+                // return that user
+                res.json(movie);
+            });
+
+        }
+
     });
+
+
+
 
 router.route('/review/:movieId')
     .get(authJwtController.isAuthenticated, function (req, res) {
