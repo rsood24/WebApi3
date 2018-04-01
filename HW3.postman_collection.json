@@ -1,8 +1,7 @@
 {
 	"info": {
-		"name": "HW3",
 		"_postman_id": "6b942b2b-df59-40f5-94b8-6cf0c6e2ceaf",
-		"description": "",
+		"name": "HW3",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -146,8 +145,7 @@
 					"path": [
 						"users"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -174,8 +172,7 @@
 						"users",
 						"{{userID}}"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -276,14 +273,20 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "7edd69ad-36d8-403b-ac89-f290cdc559cc",
+						"id": "34fe6016-837b-45e3-ad07-d0751644adff",
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
 							"var secId = jsonData[4]._id;",
 							"postman.setEnvironmentVariable(\"secId\", secId);",
-							"var secId = jsonData[5]._id;",
+							"var id = jsonData[3]._id;",
 							"postman.setEnvironmentVariable(\"id\", id);",
+							"var aId = jsonData[2]._id;",
+							"postman.setEnvironmentVariable(\"aId\", aId);",
+							"var mov = jsonData[1]._id;",
+							"postman.setEnvironmentVariable(\"mov\", mov);",
+							"var last = jsonData[0]._id;",
+							"postman.setEnvironmentVariable(\"last\", last);",
 							""
 						]
 					}
@@ -356,8 +359,7 @@
 						"movies",
 						"{{id}}"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -412,8 +414,169 @@
 						"movies",
 						"{{secId}}"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a Movie",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/movies/{{secId}}",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"{{secId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get a invalid movie",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/movies/{{empty}}",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"{{empty}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "movie + reviews",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
 				},
-				"description": ""
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/movies/{{aId}}?review=true",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"movies",
+						"{{aId}}"
+					],
+					"query": [
+						{
+							"key": "review",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post a review",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Jake\",\n    \"quote\": \"The music was not that good, but a lot of good quotes\",\n    \"rating\": 4\n}"
+				},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/review/{{mov}}",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"review",
+						"{{mov}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post review invalid movie",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Jason\",\n\t\"quote\": \"I saw this with my cousin and we Loved it.\",\n\t\"rating\": 5\n}"
+				},
+				"url": {
+					"raw": "https://rsood-hw3.herokuapp.com/review/jalepno",
+					"protocol": "https",
+					"host": [
+						"rsood-hw3",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"review",
+						"jalepno"
+					]
+				}
 			},
 			"response": []
 		}
