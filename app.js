@@ -106,7 +106,7 @@ router.route('/movies/:movieId')
         if (req.query.review === "true") {
             Movie.findById(id, function (err, movie) {
                 if (err) {
-                    res.json({messag: "movie not in database"});
+                    res.json({message: "movie not in database"});
                 }
                 else {
                     var obj = new Object();
@@ -127,7 +127,7 @@ router.route('/movies/:movieId')
         }
         else {
             Movie.findById(id, function (err, movie) {
-                if (err) res.send(err);
+                if (err) res.json({message: "movie not in database"});
 
                 var movieJson = JSON.stringify(movie);
                 // return that user
