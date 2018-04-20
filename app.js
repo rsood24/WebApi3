@@ -53,11 +53,39 @@ router.route('/users')
 
 router.route('/movies')
     .get(authJwtController.isAuthenticated, function (req, res) {
-        Movie.find(function (err, movies) {
-            if (err) res.send(err);
 
-            res.json(movies);
-        });
+        if (req.query.review === "true") {
+            Movie.find(function (err, movies) {
+                if (err) {
+                    res.json({message: "no movies in database"});
+                }
+                else {
+                    var obj = new Object();
+                    Review.find(function (err, result) {
+                        if (err) {
+                            res.send(err);
+                        }
+                        else {
+                            obj.movie = movie;
+                            obj.reviews = result;
+                            var retObj = JSON.stringify(obj);
+                            res.send(retObj);
+                        }
+                    });
+                }
+            });
+        }
+        else {
+            Movie.find(function (err, movies) {
+                if (err) res.json({message: "movies not in database"});
+
+                //var movieJson = JSON.stringify(movies);
+                // return that user
+                res.json(movies);
+            });
+
+        }
+
     });
 
 router.route('/addAmovie')
