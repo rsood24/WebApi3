@@ -138,17 +138,14 @@ router.route('/movies/:movieId')
             Movie.aggregate([
                 {
                     $match: {
-                        from: "reviews",
-                        localField: "title",
-                        foreignField: "movieTitle",
-                        as: "reviews"
+                        _id: mongoose.Types.ObjectId(id)
                     }
                 },
                 {
                     $lookup: {
                         from: "reviews",
-                        localField: "title",
-                        foreignField: "movieTitle",
+                        localField: "_id",
+                        foreignField: "movieid",
                         as: "reviews"
                     }
                 }
