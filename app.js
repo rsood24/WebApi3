@@ -7,6 +7,7 @@ var User = require('./Users');
 var Movie = require('./Movies');
 var Review = require('./Reviews');
 var jwt = require('jsonwebtoken');
+var mongoose = require('mongoose');
 
 var app = express();
 app.use(bodyParser.json());
@@ -113,6 +114,8 @@ router.route('/addAmovie')
         movie.Year = req.body.Year;
         movie.Genre = req.body.Genre;
         movie.Actors = req.body.Actors;
+        movie.avgRating = 0;
+        movie.numReview = 0;
 
         movie.save(function(err) {
             if(err) {
@@ -144,15 +147,15 @@ router.route('/movies/:movieId')
                 {
                     $lookup: {
                         from: "reviews",
-                        localField: "_id",
-                        foreignField: "movieid",
+                        localField: "Title",
+                        foreignField: "movieName",
                         as: "reviews"
                     }
                 }
-            ]).exec(function (err, movies) {
+            ]).exec(function (err, reviews) {
                 if(err) res.status(500).send(err);
                 else
-                    res.send(movies);
+                    res.send(reviews);
             })
 
         }
@@ -267,12 +270,17 @@ router.route('/review/:movieId')
            else
            {
                var review = new Review();
-               review.movieid = id;
+               review.movieName = movie.Title;
                review.name = req.body.name;
                review.quote = req.body.quote;
                review.rating = req.body.rating;
+               if(movie.avgRating === null)
+                   movie.avgRating = 0;
+               if(movie.numReview === null)
+                   movie.numReview = 0;
+
                movie.numReview += 1;
-               movie.avgRating = ((movie.avgRating * (movie.numReview - 1)) + review.rating)/ movie.numReview;
+               movie.avgRating = (movie.avgRating * (movie.numReview - 1) + review.rating)/ movie.numReview;
                if(req.body.rating > 5)
                {
                    res.json({message: 'Invalid Rating'});
