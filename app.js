@@ -134,26 +134,30 @@ router.route('/movies/:movieId')
     .get(authJwtController.isAuthenticated, function (req, res) {
         var id = req.params.movieId;
         if (req.query.review === "true") {
-            Movie.findById(id, function (err, movie) {
-                if (err) {
-                    res.json({message: "movie not in database"});
+
+            Movie.aggregate([
+                {
+                    $match: {
+                        from: "reviews",
+                        localField: "title",
+                        foreignField: "movieTitle",
+                        as: "reviews"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "reviews",
+                        localField: "title",
+                        foreignField: "movieTitle",
+                        as: "reviews"
+                    }
                 }
-                else {
-                    var obj = new Object();
-                    var query = {movieid: id};
-                    Review.find(query, function (err, result) {
-                        if (err) {
-                            res.send(err);
-                        }
-                        else {
-                            obj.movie = movie;
-                            obj.movie.reviews = result;
-                            var retObj = JSON.stringify(obj);
-                            res.send(retObj);
-                        }
-                    });
-                }
-            });
+            ]).exec(function (err, movies) {
+                if(err) res.status(500).send(err);
+                else
+                    res.send(movies);
+            })
+
         }
         else {
             Movie.findById(id, function (err, movie) {
