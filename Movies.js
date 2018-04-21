@@ -27,6 +27,8 @@ var MovieSchema = new Schema({
         enum: ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Horror', 'Mystery', 'Thriller', 'Western'],
         required: true
     },
+    avgRating: { type: Number },
+    numReview: { type: Number },
     Actors: [ActorSchema]
 });
 

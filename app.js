@@ -147,7 +147,7 @@ router.route('/movies/:movieId')
                         }
                         else {
                             obj.movie = movie;
-                            obj.reviews = result;
+                            obj.movie.reviews = result;
                             var retObj = JSON.stringify(obj);
                             res.send(retObj);
                         }
@@ -270,7 +270,8 @@ router.route('/review/:movieId')
                review.name = req.body.name;
                review.quote = req.body.quote;
                review.rating = req.body.rating;
-
+               movie.numReview += 1;
+               movie.avgRating = ((movie.avgRating * (movie.numReview - 1)) + review.rating)/ movie.numReview;
                if(req.body.rating > 5)
                {
                    res.json({message: 'Invalid Rating'});
@@ -284,7 +285,17 @@ router.route('/review/:movieId')
                            return res.json(err);
                        }
 
-                       res.json({message: 'Review inserted!'});
+                       movie.save(function(err) {
+                           if(err) {
+                               res = res.status(500);
+
+                               return res.json(err);
+                           }
+
+                           res.json({message: 'Review inserted!'});
+                       });
+
+
                    });
                }
            }
