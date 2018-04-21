@@ -57,23 +57,15 @@ router.route('/movies')
 
         if (req.query.review === "true") {
             Movie.find(function (err, movies) {
-                if (err) {
-                    res.json({message: "no movies in database"});
+
+                if(err)
+                    res.send(err);
+                else{
+
+                    movies.sort((a, b) => parseFloat(b.avgRating) - parseFloat(a.avgRating));
+                    res.json(movies);
                 }
-                else {
-                    var obj = new Object();
-                    Review.find(function (err, result) {
-                        if (err) {
-                            res.send(err);
-                        }
-                        else {
-                            obj.movie = movie;
-                            obj.reviews = result;
-                            var retObj = JSON.stringify(obj);
-                            res.send(retObj);
-                        }
-                    });
-                }
+
             });
         }
         else {
