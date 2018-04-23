@@ -61,9 +61,21 @@ router.route('/movies')
                 if(err)
                     res.send(err);
                 else{
-
-                    movies.sort((a, b) => parseFloat(b.avgRating) - parseFloat(a.avgRating));
-                    res.json(movies);
+                    Movie.aggregate([{
+                        $lookup:{
+                            from: "reviews",
+                            localField: "Title",
+                            foreignField: "movieName",
+                            as: 'review'
+                        }
+                    }
+                    ], function (err, result) {
+                        if(err) res.send(err);
+                        else{
+                            result.sort((a, b) => parseFloat(b.avgRating) - parseFloat(a.avgRating));
+                            res.json(result);
+                        }
+                    });
                 }
 
             });
