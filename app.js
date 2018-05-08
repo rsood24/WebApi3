@@ -265,59 +265,54 @@ router.route('/movies/:movieId')
 
 });
 
-router.route('/review/:movieId')
+router.route('/review/')
     .post(authJwtController.isAuthenticated, function (req,res) {
-       var id = req.params.movieId;
-       Movie.findById(id, function (err, movie) {
-           if (err)
-               res.send({message: 'Movie not in database'});
-           else
-           {
-               var review = new Review();
-               review.movieName = movie.Title;
-               review.name = req.body.name;
-               review.quote = req.body.quote;
-               review.rating = req.body.rating;
-               if(movie.avgRating === null)
-                   movie.avgRating = 0;
-               if(movie.numReview === null)
-                   movie.numReview = 0;
+               var query = { Title: req.body.Title };
+               Movie.find(query, function(err, movie) {
+                  if(err)
+                      res.send(err);
 
-               movie.numReview += 1;
-               movie.avgRating = (movie.avgRating * (movie.numReview - 1) + review.rating)/ movie.numReview;
-               if(req.body.rating > 5)
-               {
-                   res.json({message: 'Invalid Rating'});
-               }
-               else
-               {
-                   review.save(function(err) {
-                       if(err) {
-                           res = res.status(500);
+                  var review = new Review();
 
-                           return res.json(err);
-                       }
+                  if(movie[0].avgRating === null)
+                      movie[0].avgRating = 0;
+                  if(movie[0].numReview === null)
+                      movie[0].numReview = 0;
 
-                       movie.save(function(err) {
-                           if(err) {
-                               res = res.status(500);
+                  movie[0].numReview += 1;
+                  movie[0].avgRating = (movie[0].avgRating * (movie[0].numReview - 1) + req.body.rating)/ movie[0].numReview;
+                  if(req.body.rating > 5)
+                  {
+                      res.json({message: 'Invalid Rating'});
+                  }
+                  else
+                      {
+                          movie[0].save(function(err) {
+                              if(err) {
+                                  res = res.status(500);
 
-                               return res.json(err);
-                           }
+                                  return res.json(err);
+                              }
+                              review.movieName = movie[0].Title;
+                              review.name = req.body.name;
+                              review.quote = req.body.quote;
+                              review.rating = req.body.rating;
+                              review.save(function(err) {
+                                  if(err) {
+                                      res = res.status(500);
 
-                           res.json({message: 'Review inserted!'});
-                       });
+                                      return res.json(err);
+                                  }
+                                  res.json({message: 'Review inserted!'});
+                              });
 
-
-                   });
-               }
-           }
+                          });
 
 
+                   }
+               });
 
 
-
-           });
 
     });
 
